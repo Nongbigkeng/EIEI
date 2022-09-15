@@ -3,14 +3,13 @@
 curl -X POST \
      -H "Content-Type: application/json" \
      --data '
-     {"name": "mongo-sink",
+     {"name": "mongo-source",
       "config": {
-         "connector.class":"com.mongodb.kafka.connect.MongoSinkConnector",
+         "connector.class":"com.mongodb.kafka.connect.MongoSourceConnector",
          "connection.uri":"mongodb://mongo1:27017/?replicaSet=rs0",
          "database":"quickstart2",
-         "collection":"topicData",
-         "topics":"quickstart.sampleData",
-         "change.data.capture.handler": "com.mongodb.kafka.connect.sink.cdc.mongodb.ChangeStreamHandler"
+         "collection":"sampleData",
+         "pipeline":"[{\"$match\": {\"operationType\": \"insert\"}}, {$addFields : {\"fullDocument.travel\":\"MongoDB Kafka Connector\"}}]"
          }
      }
      ' \
